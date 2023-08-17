@@ -2,7 +2,7 @@ package com.example.productservice.controller;
 
 import com.example.productservice.command.CreateProductCommand;
 import com.example.productservice.model.ProductDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +16,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private final Environment environment;
+    private final CommandGateway commandGateway;
 
-    @Autowired
-    private Environment environment;
+    public ProductController(Environment environment, CommandGateway commandGateway) {
+        this.environment = environment;
+        this.commandGateway = commandGateway;
+    }
+
 
     @GetMapping
     public String getProducts() {
@@ -34,7 +39,13 @@ public class ProductController {
                 .quantity(productDto.getQuantity())
                 .build();
 
-        return "Post Request: Product Created with title: " + productDto.getTitle();
+        String result;
+        try {
+            result = commandGateway.sendAndWait(createProductCommand);
+        } catch (Exception e) {
+            result = e.getLocalizedMessage();
+        }
+        return result;
     }
 
     @DeleteMapping
