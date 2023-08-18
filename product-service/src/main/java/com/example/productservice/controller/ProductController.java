@@ -24,12 +24,6 @@ public class ProductController {
         this.commandGateway = commandGateway;
     }
 
-
-    @GetMapping
-    public String getProducts() {
-        return "Get Request: Get All Products " + environment.getProperty("local.server.port");
-    }
-
     @PostMapping
     public String createProduct(@RequestBody ProductDto productDto) {
         CreateProductCommand createProductCommand = CreateProductCommand.builder()
@@ -48,8 +42,13 @@ public class ProductController {
         return result;
     }
 
-    @DeleteMapping
-    public String deleteProduct() {
-        return "Delete Request: Product Deleted";
-    }
+//    @GetMapping
+//    public String getProducts() {
+//        return "Get Request: Get All Products " + environment.getProperty("local.server.port");
+//    }
+//
+//    @DeleteMapping
+//    public String deleteProduct() {
+//        return "Delete Request: Product Deleted";
+//    }
 }
