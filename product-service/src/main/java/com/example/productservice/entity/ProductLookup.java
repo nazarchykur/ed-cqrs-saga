@@ -27,7 +27,7 @@ public class ProductLookup {
     @Id
     private String productId;
 
-    @Column(unique = true)
+//    @Column(unique = true)
     private String title;
 
     @Override

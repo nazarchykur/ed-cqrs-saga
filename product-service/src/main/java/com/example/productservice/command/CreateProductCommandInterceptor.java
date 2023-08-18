@@ -8,7 +8,6 @@ import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -33,8 +32,11 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
                 CreateProductCommand createProductCommand = (CreateProductCommand) command.getPayload();
 
                productLookupRepository.findByProductIdOrTitle(createProductCommand.getProductId(), createProductCommand.getTitle())
-                       .orElseThrow(() -> new IllegalStateException("Product with id: " + createProductCommand.getProductId() +
-                               " or title: " + createProductCommand.getTitle() + " already exists"));
+                       .stream().findAny()
+                       .ifPresent(productLookup -> {
+                           throw new IllegalStateException("Product with id: " + productLookup.getProductId() +
+                                   " or title: " + productLookup.getTitle() + " already exists");
+                       });
             }
             return command;
         };
