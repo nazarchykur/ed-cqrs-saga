@@ -1,7 +1,7 @@
 package com.example.productservice.controller;
 
 import com.example.productservice.command.CreateProductCommand;
-import com.example.productservice.model.ProductDto;
+import com.example.productservice.dto.ProductDto;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.DeleteMapping;

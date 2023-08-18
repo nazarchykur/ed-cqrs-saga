@@ -17,6 +17,8 @@ public class Product {
     @Id
     @Column(unique = true)
     private String productId;
+
+    @Column(unique = true)
     private String title;
     private BigDecimal price;
     private Integer quantity;
