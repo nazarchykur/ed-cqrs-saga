@@ -2,6 +2,7 @@ package com.example.productservice.controller;
 
 import com.example.productservice.command.CreateProductCommand;
 import com.example.productservice.dto.ProductDto;
+import jakarta.validation.Valid;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public String createProduct(@RequestBody ProductDto productDto) {
+    public String createProduct(@Valid @RequestBody ProductDto productDto) {
         CreateProductCommand createProductCommand = CreateProductCommand.builder()
                 .productId(UUID.randomUUID().toString())
                 .title(productDto.getTitle())
