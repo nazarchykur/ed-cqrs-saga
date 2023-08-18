@@ -1,5 +1,7 @@
 package com.example.productservice.command;
 
+import com.example.productservice.repository.ProductLookupRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
@@ -12,7 +14,10 @@ import java.util.function.BiFunction;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CreateProductCommandInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
+    private final ProductLookupRepository productLookupRepository;
+
     @Nonnull
     @Override
     public CommandMessage<?> handle(@Nonnull CommandMessage<?> message) {
@@ -27,12 +32,9 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
             if (CreateProductCommand.class.equals(command.getPayloadType())) {
                 CreateProductCommand createProductCommand = (CreateProductCommand) command.getPayload();
 
-                if (createProductCommand.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
-                    throw new IllegalArgumentException("Price must be greater than zero");
-                }
-                if (createProductCommand.getTitle() == null || createProductCommand.getTitle().isEmpty()) {
-                    throw new IllegalArgumentException("Title cannot be empty");
-                }
+               productLookupRepository.findByProductIdOrTitle(createProductCommand.getProductId(), createProductCommand.getTitle())
+                       .orElseThrow(() -> new IllegalStateException("Product with id: " + createProductCommand.getProductId() +
+                               " or title: " + createProductCommand.getTitle() + " already exists"));
             }
             return command;
         };
