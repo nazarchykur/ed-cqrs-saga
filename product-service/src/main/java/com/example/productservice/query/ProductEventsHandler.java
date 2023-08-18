@@ -4,11 +4,13 @@ import com.example.productservice.entity.Product;
 import com.example.productservice.event.ProductCreatedEvent;
 import com.example.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 @Component
+@ProcessingGroup("product-group")
 @RequiredArgsConstructor
 public class ProductEventsHandler {
 
