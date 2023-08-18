@@ -31,13 +31,7 @@ public class ProductController {
                 .quantity(productDto.getQuantity())
                 .build();
 
-        String result;
-        try {
-            result = commandGateway.sendAndWait(createProductCommand);
-        } catch (Exception e) {
-            result = e.getLocalizedMessage();
-        }
-        return result;
+        return commandGateway.sendAndWait(createProductCommand);
     }
 
 //    @GetMapping
