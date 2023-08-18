@@ -1,12 +1,9 @@
 package com.example.productservice.controller;
 
-import com.example.productservice.command.CreateProductCommand;
-import com.example.productservice.dto.ProductDto;
+import com.example.productservice.dto.CreateProductCommand;
 import jakarta.validation.Valid;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +23,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public String createProduct(@Valid @RequestBody ProductDto productDto) {
-        CreateProductCommand createProductCommand = CreateProductCommand.builder()
+    public String createProduct(@Valid @RequestBody CreateProductCommand productDto) {
+        com.example.productservice.command.CreateProductCommand createProductCommand = com.example.productservice.command.CreateProductCommand.builder()
                 .productId(UUID.randomUUID().toString())
                 .title(productDto.getTitle())
                 .price(productDto.getPrice())
