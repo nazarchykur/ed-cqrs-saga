@@ -19,8 +19,11 @@ public class ProductEventsHandler {
 
     // this @ExceptionHandler from axonframework interceptors can handle any exception only within this class, and not globally
     @ExceptionHandler(resultType = Exception.class)
-    public void handle(Exception exception) {
+    public void handle(Exception exception) throws Exception {
         // log error message
+        // instead of just log it, we can rethrow the exception
+        // since we rethrow the exception, can handle it by creating ProductServiceEventsErrorHandler implements ListenerInvocationErrorHandler
+        throw exception;
     }
 
     @ExceptionHandler(resultType = IllegalArgumentException.class)
