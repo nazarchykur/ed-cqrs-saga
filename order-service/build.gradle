@@ -24,6 +24,7 @@ repositories {
 ext {
     set('springCloudVersion', "2022.0.4")
     set('axonSpringBootVersion', "4.8.1")
+    set('coreVersion', "0.0.1-SNAPSHOT")
 }
 
 dependencies {
@@ -33,6 +34,8 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation "org.axonframework:axon-spring-boot-starter:${axonSpringBootVersion}"
     implementation 'com.google.guava:guava:32.1.2-jre'
+
+    implementation "com.example:core:${coreVersion}"
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
