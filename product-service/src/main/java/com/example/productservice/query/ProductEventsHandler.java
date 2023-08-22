@@ -32,7 +32,7 @@ public class ProductEventsHandler {
     }
 
     @EventHandler
-    public void on(ProductCreatedEvent event) {
+    public void on(ProductCreatedEvent event) throws Exception {
         Product product = new Product();
         BeanUtils.copyProperties(event, product);
         try {
@@ -41,5 +41,6 @@ public class ProductEventsHandler {
             // log error message
             e.printStackTrace();
         }
+        throw new Exception("Forcing an exception in the event handler class");
     }
 }
