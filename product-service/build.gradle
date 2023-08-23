@@ -34,6 +34,8 @@ dependencies {
 	implementation "org.axonframework:axon-spring-boot-starter:${axonSpringBootVersion}"
 	implementation 'com.google.guava:guava:32.1.2-jre'
 
+	implementation project(":core")
+
 	runtimeOnly 'com.h2database:h2'
 
 	compileOnly 'org.projectlombok:lombok'

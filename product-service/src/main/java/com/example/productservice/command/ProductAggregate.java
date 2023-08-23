@@ -1,5 +1,6 @@
 package com.example.productservice.command;
 
+import com.example.core.command.ReserveProductCommand;
 import com.example.productservice.event.ProductCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -42,6 +43,14 @@ public class ProductAggregate {
 //            throw new Exception("An error took place in the CreateProductCommand @CommandHandler");
 //        }
     }
+
+    @CommandHandler
+    public void handle(ReserveProductCommand reserveProductCommand) {
+        if (quantity < reserveProductCommand.getQuantity()) {
+            throw new IllegalArgumentException("Insufficient quantity in stock");
+        }
+    }
+
 
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
