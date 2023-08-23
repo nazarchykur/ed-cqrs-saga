@@ -5,14 +5,14 @@ import com.example.productservice.entity.Product;
 import com.example.productservice.event.ProductCreatedEvent;
 import com.example.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
+@Slf4j
 @Component
 @ProcessingGroup("product-group")
 @RequiredArgsConstructor
@@ -55,5 +55,6 @@ public class ProductEventsHandler {
                     product.setQuantity(product.getQuantity() - productReservedEvent.getQuantity());
                     productRepository.save(product);
                 });
+        log.info("ProductReservedEvent is called for orderId: " + productReservedEvent.getOrderId() + " and productId: " + productReservedEvent.getProductId());
     }
 }
