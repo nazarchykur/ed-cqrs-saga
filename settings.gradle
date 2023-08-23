@@ -1,2 +1,8 @@
 rootProject.name = 'ed-cqrs-saga'
 
+include 'discovery-server'
+include 'api-gateway'
+include 'order-service'
+include 'product-service'
+include 'core'
+
