@@ -1,5 +1,6 @@
 package com.example.productservice.query;
 
+import com.example.core.event.ProductReservedEvent;
 import com.example.productservice.entity.Product;
 import com.example.productservice.event.ProductCreatedEvent;
 import com.example.productservice.repository.ProductRepository;
@@ -9,6 +10,8 @@ import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @ProcessingGroup("product-group")
@@ -32,15 +35,25 @@ public class ProductEventsHandler {
     }
 
     @EventHandler
-    public void on(ProductCreatedEvent event) throws Exception {
+    public void on(ProductCreatedEvent productCreatedEvent) throws Exception {
         Product product = new Product();
-        BeanUtils.copyProperties(event, product);
+        BeanUtils.copyProperties(productCreatedEvent, product);
         try {
             productRepository.save(product);
         } catch (IllegalArgumentException e) {
             // log error message
             e.printStackTrace();
         }
-        throw new Exception("Forcing an exception in the event handler class");
+        // that was only for testing
+//        throw new Exception("Forcing an exception in the event handler class");
+    }
+
+    @EventHandler
+    public void on(ProductReservedEvent productReservedEvent) {
+        productRepository.findByProductId(productReservedEvent.getProductId())
+                .ifPresent(product -> {
+                    product.setQuantity(product.getQuantity() - productReservedEvent.getQuantity());
+                    productRepository.save(product);
+                });
     }
 }

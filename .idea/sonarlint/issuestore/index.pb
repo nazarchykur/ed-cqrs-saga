@@ -24,5 +24,3 @@ Tproduct-service/src/main/java/com/example/productservice/query/FindProductQuery
 Yproduct-service/src/main/java/com/example/productservice/query/rest/ProductRestModel.java,b/8/b85e6f759b082f47b39fc11b795d8879de513135
 ‡
 Wproduct-service/src/main/java/com/example/productservice/query/ProductQueryHandler.java,b/6/b66799bf4d4181f067897ea22f7e17368c957d95
-ˆ
-Xproduct-service/src/main/java/com/example/productservice/query/ProductEventsHandler.java,5/1/5152f2a532887968272a0debf34eeb8b99de9bf7
