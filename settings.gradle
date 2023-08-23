@@ -4,5 +4,6 @@ include 'discovery-server'
 include 'api-gateway'
 include 'order-service'
 include 'product-service'
+include 'user-service'
 include 'core'
 
