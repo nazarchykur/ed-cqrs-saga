@@ -1,1 +1,36 @@
+server:
+  port: 0
+  error:
+    include-message: always
+    include-binding-errors: always
 
+spring:
+  application:
+    name: user-service
+#  datasource:
+#    url: jdbc:h2:file:~/products;AUTO_SERVER=TRUE
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+#    hibernate:
+#      ddl-auto: create
+#  h2:
+#    console:
+#      enabled: true
+#      settings:
+#        web-allow-others: true
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${instanceId:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+#axon:
+#  eventhandling:
+#    processors:
+#      product-group:
+#        mode: subscribing

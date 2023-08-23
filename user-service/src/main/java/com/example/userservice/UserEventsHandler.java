@@ -14,14 +14,14 @@ public class UserEventsHandler {
         PaymentDetails paymentDetails = PaymentDetails.builder()
                 .cardNumber("123Card")
                 .cvv("123")
-                .name("SERGEY KARGOPOLOV")
+                .name("Leo Turtle")
                 .validUntilMonth(12)
                 .validUntilYear(2030)
                 .build();
 
         User user = User.builder()
-                .firstName("Sergey")
-                .lastName("Kargopolov")
+                .firstName("Leo")
+                .lastName("Turtle")
                 .userId(query.getUserId())
                 .paymentDetails(paymentDetails)
                 .build();
