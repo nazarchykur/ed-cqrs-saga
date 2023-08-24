@@ -1,5 +1,6 @@
 package com.example.orderservice.saga;
 
+import com.example.core.command.CancelProductReservationCommand;
 import com.example.core.command.ProcessPaymentCommand;
 import com.example.core.command.ReserveProductCommand;
 import com.example.core.event.PaymentProcessedEvent;
@@ -65,10 +66,12 @@ public class OrderSaga {
         } catch (Exception e) {
             log.error(e.getMessage());
             // start a compensation transaction
+            cancelProductReservation(productReservedEvent, e.getMessage());
             return;
         }
         if (userPaymentDetails == null) {
             // start a compensation transaction
+            cancelProductReservation(productReservedEvent, "Could not fetch user payment details");
             return;
         }
 
@@ -86,9 +89,12 @@ public class OrderSaga {
         } catch (Exception e) {
             log.error(e.getMessage());
             // start a compensation transaction
+            cancelProductReservation(productReservedEvent, e.getMessage());
+            return;
         }
         if (result == null) {
             // start a compensation transaction
+            cancelProductReservation(productReservedEvent, "Could not process payment with provided user payment details");
         }
     }
 
@@ -105,5 +111,17 @@ public class OrderSaga {
     public void handle(OrderApprovedEvent orderApprovedEvent) {
         log.info("Order is approved. Order Saga is completed for orderId: " + orderApprovedEvent.getOrderId());
         // SagaLifecycle.end(); // 2 way
+    }
+
+    private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {
+        CancelProductReservationCommand cancelProductReservationCommand = CancelProductReservationCommand.builder()
+                .orderId(productReservedEvent.getOrderId())
+                .productId(productReservedEvent.getProductId())
+                .quantity(productReservedEvent.getQuantity())
+                .userId(productReservedEvent.getUserId())
+                .reason(reason)
+                .build();
+
+        commandGateway.send(cancelProductReservationCommand);
     }
 }
