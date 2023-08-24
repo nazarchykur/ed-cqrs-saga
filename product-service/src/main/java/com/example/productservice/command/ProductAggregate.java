@@ -1,5 +1,6 @@
 package com.example.productservice.command;
 
+import com.example.core.command.CancelProductReservationCommand;
 import com.example.core.command.ReserveProductCommand;
 import com.example.core.event.ProductReservedEvent;
 import com.example.productservice.event.ProductCreatedEvent;
@@ -71,5 +72,10 @@ public class ProductAggregate {
     @EventSourcingHandler
     public void on(ProductReservedEvent productReservedEvent) {
         this.quantity -= productReservedEvent.getQuantity();
+    }
+
+    @CommandHandler
+    public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+
     }
 }
