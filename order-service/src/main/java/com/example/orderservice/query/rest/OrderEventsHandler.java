@@ -1,6 +1,7 @@
 package com.example.orderservice.query.rest;
 
 import com.example.orderservice.entity.Order;
+import com.example.orderservice.event.OrderApprovedEvent;
 import com.example.orderservice.event.OrderCreatedEvent;
 import com.example.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,4 +24,15 @@ public class OrderEventsHandler {
         orderRepository.save(order);
     }
 
+    @EventHandler
+    public void on(OrderApprovedEvent event) {
+        orderRepository.findByOrderId(event.getOrderId())
+                .ifPresentOrElse(order -> {
+                    order.setOrderStatus(event.getOrderStatus());
+                    orderRepository.save(order);
+                },
+                () -> {
+                    // TODO: do something when order not found
+                });
+    }
 }
