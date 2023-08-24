@@ -1,5 +1,6 @@
 package com.example.orderservice.saga;
 
+import com.example.core.command.ProcessPaymentCommand;
 import com.example.core.command.ReserveProductCommand;
 import com.example.core.event.ProductReservedEvent;
 import com.example.core.model.User;
@@ -13,6 +14,9 @@ import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Saga
@@ -64,5 +68,22 @@ public class OrderSaga {
         }
 
         log.info("Successfully fetched user payment details for user: " + userPaymentDetails.getFirstName());
+
+        ProcessPaymentCommand processPaymentCommand = ProcessPaymentCommand.builder()
+                .orderId(productReservedEvent.getOrderId())
+                .paymentDetails(userPaymentDetails.getPaymentDetails())
+                .paymentId(UUID.randomUUID().toString())
+                .build();
+
+        String result = null;
+        try {
+            result = commandGateway.sendAndWait(processPaymentCommand, 10, TimeUnit.SECONDS );
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            // start a compensation transaction
+        }
+        if (result == null) {
+            // start a compensation transaction
+        }
     }
 }
