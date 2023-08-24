@@ -12,6 +12,7 @@ import com.example.orderservice.command.ApproveOrderCommand;
 import com.example.orderservice.command.RejectOrderCommand;
 import com.example.orderservice.event.OrderApprovedEvent;
 import com.example.orderservice.event.OrderCreatedEvent;
+import com.example.orderservice.event.OrderRejectedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
@@ -133,5 +134,11 @@ public class OrderSaga {
                 .build();
 
         commandGateway.send(cancelProductReservationCommand);
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(OrderRejectedEvent orderRejectedEvent) {
+        log.info("Order is rejected. Order Saga is completed for orderId: " + orderRejectedEvent.getOrderId());
     }
 }

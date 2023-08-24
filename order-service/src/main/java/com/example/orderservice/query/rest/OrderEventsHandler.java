@@ -3,6 +3,7 @@ package com.example.orderservice.query.rest;
 import com.example.orderservice.entity.Order;
 import com.example.orderservice.event.OrderApprovedEvent;
 import com.example.orderservice.event.OrderCreatedEvent;
+import com.example.orderservice.event.OrderRejectedEvent;
 import com.example.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -33,6 +34,15 @@ public class OrderEventsHandler {
                 },
                 () -> {
                     // TODO: do something when order not found
+                });
+    }
+
+    @EventHandler
+    public void on(OrderRejectedEvent event) {
+        orderRepository.findByOrderId(event.getOrderId())
+                .ifPresent(order -> {
+                    order.setOrderStatus(event.getOrderStatus());
+                    orderRepository.save(order);
                 });
     }
 }
