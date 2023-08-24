@@ -9,6 +9,7 @@ import com.example.core.event.ProductReservedEvent;
 import com.example.core.model.User;
 import com.example.core.query.FetchUserPaymentDetailsQuery;
 import com.example.orderservice.command.ApproveOrderCommand;
+import com.example.orderservice.command.RejectOrderCommand;
 import com.example.orderservice.event.OrderApprovedEvent;
 import com.example.orderservice.event.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -117,7 +118,9 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(ProductReservationCancelledEvent productReservationCancelledEvent) {
         // create and send a RejectOrderCommand
+        RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(productReservationCancelledEvent.getOrderId(), productReservationCancelledEvent.getReason());
 
+        commandGateway.send(rejectOrderCommand);
     }
 
     private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {
