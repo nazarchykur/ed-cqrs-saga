@@ -2,6 +2,7 @@ package com.example.orderservice.saga;
 
 import com.example.core.command.ProcessPaymentCommand;
 import com.example.core.command.ReserveProductCommand;
+import com.example.core.event.PaymentProcessedEvent;
 import com.example.core.event.ProductReservedEvent;
 import com.example.core.model.User;
 import com.example.core.query.FetchUserPaymentDetailsQuery;
@@ -85,5 +86,10 @@ public class OrderSaga {
         if (result == null) {
             // start a compensation transaction
         }
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(PaymentProcessedEvent paymentProcessedEvent) {
+        // send an ApproveOrderCommand
     }
 }
