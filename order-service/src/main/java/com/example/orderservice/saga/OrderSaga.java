@@ -7,11 +7,14 @@ import com.example.core.event.ProductReservedEvent;
 import com.example.core.model.User;
 import com.example.core.query.FetchUserPaymentDetailsQuery;
 import com.example.orderservice.command.ApproveOrderCommand;
+import com.example.orderservice.event.OrderApprovedEvent;
 import com.example.orderservice.event.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
+import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
@@ -95,5 +98,12 @@ public class OrderSaga {
         ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
 
         commandGateway.send(approveOrderCommand);
+    }
+
+    @EndSaga // 1 way
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(OrderApprovedEvent orderApprovedEvent) {
+        log.info("Order is approved. Order Saga is completed for orderId: " + orderApprovedEvent.getOrderId());
+        // SagaLifecycle.end(); // 2 way
     }
 }
