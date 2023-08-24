@@ -62,6 +62,19 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productReservedEvent);
     }
 
+    @CommandHandler
+    public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+        ProductReservationCancelledEvent productReservationCancelledEvent = ProductReservationCancelledEvent.builder()
+                .orderId(cancelProductReservationCommand.getOrderId())
+                .productId(cancelProductReservationCommand.getProductId())
+                .quantity(cancelProductReservationCommand.getQuantity())
+                .userId(cancelProductReservationCommand.getUserId())
+                .reason(cancelProductReservationCommand.getReason())
+                .build();
+
+        AggregateLifecycle.apply(productReservationCancelledEvent);
+    }
+
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
         this.productId = productCreatedEvent.getProductId();
@@ -75,16 +88,8 @@ public class ProductAggregate {
         this.quantity -= productReservedEvent.getQuantity();
     }
 
-    @CommandHandler
-    public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
-        ProductReservationCancelledEvent productReservationCancelledEvent = ProductReservationCancelledEvent.builder()
-                .orderId(cancelProductReservationCommand.getOrderId())
-                .productId(cancelProductReservationCommand.getProductId())
-                .quantity(cancelProductReservationCommand.getQuantity())
-                .userId(cancelProductReservationCommand.getUserId())
-                .reason(cancelProductReservationCommand.getReason())
-                .build();
-
-        AggregateLifecycle.apply(productReservationCancelledEvent);
+    @EventSourcingHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        this.quantity += productReservationCancelledEvent.getQuantity();
     }
 }

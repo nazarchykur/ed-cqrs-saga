@@ -4,6 +4,7 @@ import com.example.core.command.CancelProductReservationCommand;
 import com.example.core.command.ProcessPaymentCommand;
 import com.example.core.command.ReserveProductCommand;
 import com.example.core.event.PaymentProcessedEvent;
+import com.example.core.event.ProductReservationCancelledEvent;
 import com.example.core.event.ProductReservedEvent;
 import com.example.core.model.User;
 import com.example.core.query.FetchUserPaymentDetailsQuery;
@@ -111,6 +112,12 @@ public class OrderSaga {
     public void handle(OrderApprovedEvent orderApprovedEvent) {
         log.info("Order is approved. Order Saga is completed for orderId: " + orderApprovedEvent.getOrderId());
         // SagaLifecycle.end(); // 2 way
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        // create and send a RejectOrderCommand
+
     }
 
     private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {

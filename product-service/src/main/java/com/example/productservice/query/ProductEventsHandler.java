@@ -1,5 +1,6 @@
 package com.example.productservice.query;
 
+import com.example.core.event.ProductReservationCancelledEvent;
 import com.example.core.event.ProductReservedEvent;
 import com.example.productservice.entity.Product;
 import com.example.productservice.event.ProductCreatedEvent;
@@ -56,5 +57,15 @@ public class ProductEventsHandler {
                     productRepository.save(product);
                 });
         log.info("ProductReservedEvent is called for orderId: " + productReservedEvent.getOrderId() + " and productId: " + productReservedEvent.getProductId());
+    }
+
+    @ExceptionHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        log.info("ProductReservationCancelledEvent is called for orderId: " + productReservationCancelledEvent.getOrderId() + " and productId: " + productReservationCancelledEvent.getProductId());
+        productRepository.findByProductId(productReservationCancelledEvent.getProductId())
+                .ifPresent(product -> {
+                    product.setQuantity(product.getQuantity() + productReservationCancelledEvent.getQuantity());
+                    productRepository.save(product);
+                });
     }
 }
