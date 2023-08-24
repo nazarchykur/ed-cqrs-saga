@@ -52,4 +52,9 @@ public class OrderAggregate {
     public void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
     }
+
+    @CommandHandler
+    public void handle(RejectOrderCommand rejectOrderCommand) {
+
+    }
 }
