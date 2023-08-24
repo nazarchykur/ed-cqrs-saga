@@ -38,4 +38,9 @@ public class OrderAggregate {
         this.addressId = orderCreatedEvent.getAddressId();
         this.orderStatus = orderCreatedEvent.getOrderStatus();
     }
+
+    @CommandHandler
+    public void handle(ApproveOrderCommand approveOrderCommand) {
+       // create and publish the OrderApprovedEvent
+    }
 }
