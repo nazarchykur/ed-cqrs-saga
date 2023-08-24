@@ -2,6 +2,7 @@ package com.example.productservice.command;
 
 import com.example.core.command.CancelProductReservationCommand;
 import com.example.core.command.ReserveProductCommand;
+import com.example.core.event.ProductReservationCancelledEvent;
 import com.example.core.event.ProductReservedEvent;
 import com.example.productservice.event.ProductCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
@@ -76,6 +77,14 @@ public class ProductAggregate {
 
     @CommandHandler
     public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+        ProductReservationCancelledEvent productReservationCancelledEvent = ProductReservationCancelledEvent.builder()
+                .orderId(cancelProductReservationCommand.getOrderId())
+                .productId(cancelProductReservationCommand.getProductId())
+                .quantity(cancelProductReservationCommand.getQuantity())
+                .userId(cancelProductReservationCommand.getUserId())
+                .reason(cancelProductReservationCommand.getReason())
+                .build();
 
+        AggregateLifecycle.apply(productReservationCancelledEvent);
     }
 }
