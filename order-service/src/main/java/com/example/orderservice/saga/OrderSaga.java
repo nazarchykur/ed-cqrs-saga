@@ -15,6 +15,7 @@ import com.example.orderservice.event.OrderCreatedEvent;
 import com.example.orderservice.event.OrderRejectedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.deadline.DeadlineManager;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
@@ -24,6 +25,8 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +39,9 @@ public class OrderSaga {
 
     @Autowired
     private transient QueryGateway queryGateway;
+
+    @Autowired
+    private transient DeadlineManager deadlineManager;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
@@ -80,6 +86,11 @@ public class OrderSaga {
 
         log.info("Successfully fetched user payment details for user: " + userPaymentDetails.getFirstName());
 
+        deadlineManager.schedule(Duration.of(10, ChronoUnit.SECONDS), "payment-processing-deadline", productReservedEvent);
+
+        if (true) {
+            return;
+        }
         ProcessPaymentCommand processPaymentCommand = ProcessPaymentCommand.builder()
                 .orderId(productReservedEvent.getOrderId())
                 .paymentDetails(userPaymentDetails.getPaymentDetails())
@@ -88,7 +99,7 @@ public class OrderSaga {
 
         String result = null;
         try {
-            result = commandGateway.sendAndWait(processPaymentCommand, 10, TimeUnit.SECONDS );
+            result = commandGateway.sendAndWait(processPaymentCommand);
         } catch (Exception e) {
             log.error(e.getMessage());
             // start a compensation transaction
@@ -103,6 +114,7 @@ public class OrderSaga {
 
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(PaymentProcessedEvent paymentProcessedEvent) {
+        deadlineManager.cancelAll("payment-processing-deadline");
         // send an ApproveOrderCommand
         ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
 
