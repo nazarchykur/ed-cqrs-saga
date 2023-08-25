@@ -1,7 +1,6 @@
 package com.example.orderservice.query;
 
 import com.example.orderservice.command.OrderSummary;
-import com.example.orderservice.entity.Order;
 import com.example.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
@@ -16,7 +15,7 @@ public class OrderQueriesHandler {
     @QueryHandler
     public OrderSummary findOrder(FindOrderQuery findOrderQuery) {
         return orderRepository.findByOrderId(findOrderQuery.getOrderId())
-                .map(order -> new OrderSummary(order.getOrderId(), order.getOrderStatus()))
+                .map(order -> new OrderSummary(order.getOrderId(), order.getOrderStatus(), ""))
                 .orElse(null);
     }
 }

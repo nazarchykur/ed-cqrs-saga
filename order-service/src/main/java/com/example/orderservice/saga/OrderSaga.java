@@ -9,10 +9,12 @@ import com.example.core.event.ProductReservedEvent;
 import com.example.core.model.User;
 import com.example.core.query.FetchUserPaymentDetailsQuery;
 import com.example.orderservice.command.ApproveOrderCommand;
+import com.example.orderservice.command.OrderSummary;
 import com.example.orderservice.command.RejectOrderCommand;
 import com.example.orderservice.event.OrderApprovedEvent;
 import com.example.orderservice.event.OrderCreatedEvent;
 import com.example.orderservice.event.OrderRejectedEvent;
+import com.example.orderservice.query.FindOrderQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.deadline.DeadlineManager;
@@ -22,6 +24,7 @@ import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,6 +44,9 @@ public class OrderSaga {
 
     @Autowired
     private transient DeadlineManager deadlineManager;
+
+    @Autowired
+    private transient QueryUpdateEmitter queryUpdateEmitter;
     private String scheduleId;
 
     @StartSaga
@@ -130,6 +136,9 @@ public class OrderSaga {
     public void handle(OrderApprovedEvent orderApprovedEvent) {
         log.info("Order is approved. Order Saga is completed for orderId: " + orderApprovedEvent.getOrderId());
         // SagaLifecycle.end(); // 2 way
+        queryUpdateEmitter.emit(FindOrderQuery.class,
+                query -> true,
+                new OrderSummary(orderApprovedEvent.getOrderId(), orderApprovedEvent.getOrderStatus(), ""));
     }
 
     @SagaEventHandler(associationProperty = "orderId")
@@ -158,6 +167,9 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderRejectedEvent orderRejectedEvent) {
         log.info("Order is rejected. Order Saga is completed for orderId: " + orderRejectedEvent.getOrderId());
+        queryUpdateEmitter.emit(FindOrderQuery.class,
+                query -> true,
+                new OrderSummary(orderRejectedEvent.getOrderId(), orderRejectedEvent.getOrderStatus(), orderRejectedEvent.getReason()));
     }
 
     @DeadlineHandler(deadlineName = PAYMENT_PROCESSING_TIMEOUT_DEADLINE)

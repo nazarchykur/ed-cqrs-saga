@@ -6,4 +6,5 @@ import lombok.Value;
 public class OrderSummary {
     String orderId;
     OrderStatus orderStatus;
+    String message;
 }
