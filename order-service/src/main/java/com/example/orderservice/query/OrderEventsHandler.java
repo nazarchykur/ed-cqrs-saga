@@ -1,4 +1,4 @@
-package com.example.orderservice.query.rest;
+package com.example.orderservice.query;
 
 import com.example.orderservice.entity.Order;
 import com.example.orderservice.event.OrderApprovedEvent;
