@@ -4,11 +4,15 @@ import com.example.productservice.command.CreateProductCommandInterceptor;
 import com.example.productservice.exception.ProductServiceEventsErrorHandler;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.config.EventProcessingConfigurer;
+import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.Snapshotter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 @EnableDiscoveryClient
 @SpringBootApplication
@@ -29,6 +33,11 @@ public class ProductServiceApplication {
 
 		// if we do not create our  error handler class like ProductServiceEventsErrorHandler and can use PropagatingErrorHandler from axon
 //		eventProcessingConfigurer.registerListenerInvocationErrorHandler("product-group", conf -> PropagatingErrorHandler.instance());
+	}
+
+	@Bean(name = "productSnapshotTriggerDefinition")
+	public SnapshotTriggerDefinition productSnapshotTriggerDefinition(Snapshotter snapshotter) {
+		return new EventCountSnapshotTriggerDefinition(snapshotter, 3);
 	}
 
 }
