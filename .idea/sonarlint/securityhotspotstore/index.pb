@@ -8,8 +8,6 @@ X
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
-{
-Kapi-gateway/src/main/java/com/example/apigateway/ApiGatewayApplication.java,4/2/422f8e2234fb8d9315d14229528cf64eb193db25
 Š
 Zproduct-service/src/main/java/com/example/productservice/repository/ProductRepository.java,c/9/c972d6b3b3455666603acbfcb7edc8e2af387cdc
 „
