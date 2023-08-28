@@ -16,9 +16,5 @@ Zproduct-service/src/main/java/com/example/productservice/repository/ProductRepo
 Tproduct-service/src/main/java/com/example/productservice/query/FindProductQuery.java,0/e/0e90567a1278e0d3d5f28153d92880e4be52fb83
 â
 Yproduct-service/src/main/java/com/example/productservice/query/rest/ProductRestModel.java,b/8/b85e6f759b082f47b39fc11b795d8879de513135
-è
-_product-service/src/main/java/com/example/productservice/query/rest/ProductQueryController.java,0/d/0dd1504ff1a4cbbb20ab294dcda24714fe3a71cb
-á
-Wproduct-service/src/main/java/com/example/productservice/query/ProductQueryHandler.java,b/6/b66799bf4d4181f067897ea22f7e17368c957d95
 ò
 hproduct-service/src/main/java/com/example/productservice/exception/ProductServiceEventsErrorHandler.java,8/3/837cc2a50b21da705f6d1b6d9a79761e3d245a9a
