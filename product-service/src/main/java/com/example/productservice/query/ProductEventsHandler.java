@@ -70,4 +70,8 @@ public class ProductEventsHandler {
                 });
     }
 
+    @ResetHandler
+    public void reset() {
+        productRepository.deleteAll();
+    }
 }
